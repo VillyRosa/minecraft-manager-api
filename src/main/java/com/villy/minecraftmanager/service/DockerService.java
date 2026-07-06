@@ -47,4 +47,12 @@ public class DockerService {
         dockerClient.startContainerCmd(containerId).exec();
     }
 
+    public void stopContainerById(String containerId) {
+        dockerClient.stopContainerCmd(containerId).exec();
+    }
+
+    public void restartContainerById(String containerId) {
+        dockerClient.restartContainerCmd(containerId).exec();
+    }
+
 }

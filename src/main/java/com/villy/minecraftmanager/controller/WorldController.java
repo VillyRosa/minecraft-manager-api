@@ -52,4 +52,22 @@ public class WorldController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/start")
+    public ResponseEntity<Void> startContainer(@PathVariable UUID id) {
+        worldService.startContainerByWorldId(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/stop")
+    public ResponseEntity<Void> stopContainer(@PathVariable UUID id) {
+        worldService.stopContainerByWorldId(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/restart")
+    public ResponseEntity<Void> restartContainer(@PathVariable UUID id) {
+        worldService.restartContainerByWorldId(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -57,4 +57,24 @@ public class WorldService {
         worldRepository.delete(world);
     }
 
+    public void startContainerByWorldId(UUID id) {
+        World world = findById(id);
+        dockerService.startContainerById(world.getContainerId());
+        world.setStatus(ContainerStatus.RUNNING);
+        worldRepository.save(world);
+    }
+
+    public void stopContainerByWorldId(UUID id) {
+        World world = findById(id);
+        dockerService.stopContainerById(world.getContainerId());
+        world.setStatus(ContainerStatus.STOPPED);
+        worldRepository.save(world);
+    }
+
+    public void restartContainerByWorldId(UUID id) {
+        World world = findById(id);
+        dockerService.restartContainerById(world.getContainerId());
+        world.setStatus(ContainerStatus.RUNNING);
+        worldRepository.save(world);
+    }
 }
