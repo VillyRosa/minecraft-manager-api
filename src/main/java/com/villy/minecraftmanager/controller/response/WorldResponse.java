@@ -10,6 +10,7 @@ import java.util.UUID;
 public record WorldResponse(
         UUID id,
         String name,
+        String address,
         String description,
         String containerId,
         ContainerStatus status,

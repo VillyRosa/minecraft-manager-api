@@ -6,6 +6,7 @@ import com.villy.minecraftmanager.entity.World;
 import com.villy.minecraftmanager.mapper.WorldMapper;
 import com.villy.minecraftmanager.service.WorldService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,21 +19,28 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WorldController {
 
+    @Value("${minecraft.host}")
+    private String host;
+
     private final WorldService worldService;
 
     @GetMapping
     public ResponseEntity<List<WorldResponse>> findAll() {
-        return ResponseEntity.ok(worldService.findAll().stream().map(WorldMapper::toResponse).toList());
+        return ResponseEntity.ok(
+                worldService.findAll()
+                        .stream()
+                        .map(world -> WorldMapper.toResponse(world, host))
+                        .toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<WorldResponse> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(WorldMapper.toResponse(worldService.findById(id)));
+        return ResponseEntity.ok(WorldMapper.toResponse(worldService.findById(id), host));
     }
 
     @PostMapping
     public ResponseEntity<WorldResponse> save(@RequestBody WorldRequest request) {
-        WorldResponse response = WorldMapper.toResponse(worldService.save(WorldMapper.toEntity(request)));
+        WorldResponse response = WorldMapper.toResponse(worldService.save(WorldMapper.toEntity(request)), host);
         URI location = URI.create("/worlds/" + response.id());
 
         return ResponseEntity.created(location).body(response);
@@ -43,7 +51,7 @@ public class WorldController {
         World world = WorldMapper.toEntity(request);
         world.setId(id);
 
-        return ResponseEntity.ok(WorldMapper.toResponse(worldService.update(world)));
+        return ResponseEntity.ok(WorldMapper.toResponse(worldService.update(world), host));
     }
 
     @DeleteMapping("/{id}")

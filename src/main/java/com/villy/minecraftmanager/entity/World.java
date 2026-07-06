@@ -46,6 +46,9 @@ public class World {
 
     private String seed;
 
+    @Column(nullable = false)
+    private Integer port;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

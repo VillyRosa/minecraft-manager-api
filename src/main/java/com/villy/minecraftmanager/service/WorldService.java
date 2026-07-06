@@ -15,6 +15,7 @@ import java.util.UUID;
 public class WorldService {
 
     private final WorldRepository worldRepository;
+    private final PortService portService;
     private final DockerService dockerService;
 
     public List<World> findAll() {
@@ -28,6 +29,7 @@ public class WorldService {
 
     public World save(World world) {
         world.setStatus(ContainerStatus.CREATED);
+        world.setPort(portService.findAvaliablePort());
         World savedWorld = worldRepository.save(world);
 
         try {

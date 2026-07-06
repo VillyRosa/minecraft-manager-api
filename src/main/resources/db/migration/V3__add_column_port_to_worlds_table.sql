@@ -1,0 +1,2 @@
+ALTER TABLE worlds
+    ADD COLUMN port INTEGER NOT NULL;

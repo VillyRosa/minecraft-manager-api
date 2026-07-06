@@ -34,7 +34,7 @@ public class DockerService {
                 .withExposedPorts(new ExposedPort(25565))
                 .withPortBindings(
                         new PortBinding(
-                                Ports.Binding.bindPort(25565),
+                                Ports.Binding.bindPort(world.getPort()),
                                 new ExposedPort(25565)
                         )
                 )
