@@ -47,7 +47,7 @@ public class WorldController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<WorldResponse> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         worldService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
