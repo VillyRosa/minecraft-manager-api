@@ -15,6 +15,7 @@ import java.util.UUID;
 public class WorldService {
 
     private final WorldRepository worldRepository;
+    private final DockerService dockerService;
 
     public List<World> findAll() {
         return worldRepository.findAll();
@@ -27,7 +28,20 @@ public class WorldService {
 
     public World save(World world) {
         world.setStatus(ContainerStatus.CREATED);
-        return worldRepository.save(world);
+        World savedWorld = worldRepository.save(world);
+
+        try {
+            String containerId = dockerService.createMinecraftContainer(savedWorld);
+            dockerService.startContainerById(containerId);
+
+            savedWorld.setContainerId(containerId);
+            savedWorld.setStatus(ContainerStatus.RUNNING);
+        } catch (Exception e) {
+            e.printStackTrace();
+            savedWorld.setStatus(ContainerStatus.ERROR);
+        }
+
+        return worldRepository.save(savedWorld);
     }
 
     public World update(World world) {
