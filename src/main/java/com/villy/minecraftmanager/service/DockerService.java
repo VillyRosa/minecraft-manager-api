@@ -55,4 +55,8 @@ public class DockerService {
         dockerClient.restartContainerCmd(containerId).exec();
     }
 
+    public void deleteContainerById(String containerId) {
+        dockerClient.removeContainerCmd(containerId).exec();
+    }
+
 }

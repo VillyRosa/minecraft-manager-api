@@ -54,6 +54,7 @@ public class WorldService {
 
     public void deleteById(UUID id) {
         var world = findById(id);
+        dockerService.deleteContainerById(world.getContainerId());
         worldRepository.delete(world);
     }
 
