@@ -1,5 +1,8 @@
 package com.villy.minecraftmanager.entity;
 
+import com.villy.minecraftmanager.enums.ContainerStatus;
+import com.villy.minecraftmanager.enums.Difficulty;
+import com.villy.minecraftmanager.enums.GameMode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +28,23 @@ public class World {
     private String name;
 
     private String description;
+
+    @Column(name = "container_id")
+    private String containerId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ContainerStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "game_mode", nullable = false)
+    private GameMode gameMode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Difficulty difficulty;
+
+    private String seed;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

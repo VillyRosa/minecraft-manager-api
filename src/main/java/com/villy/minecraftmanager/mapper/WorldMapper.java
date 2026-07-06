@@ -10,6 +10,9 @@ public class WorldMapper {
         return World.builder()
                 .name(request.name())
                 .description(request.description())
+                .gameMode(request.gameMode())
+                .difficulty(request.difficulty())
+                .seed(request.seed())
                 .build();
     }
 
@@ -18,6 +21,11 @@ public class WorldMapper {
                 carta.getId(),
                 carta.getName(),
                 carta.getDescription(),
+                carta.getContainerId(),
+                carta.getStatus(),
+                carta.getGameMode(),
+                carta.getDifficulty(),
+                carta.getSeed(),
                 carta.getCreatedAt(),
                 carta.getUpdatedAt()
         );

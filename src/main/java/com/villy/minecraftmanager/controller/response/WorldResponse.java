@@ -1,7 +1,22 @@
 package com.villy.minecraftmanager.controller.response;
 
+import com.villy.minecraftmanager.enums.ContainerStatus;
+import com.villy.minecraftmanager.enums.Difficulty;
+import com.villy.minecraftmanager.enums.GameMode;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record WorldResponse(UUID id, String name, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
+public record WorldResponse(
+        UUID id,
+        String name,
+        String description,
+        String containerId,
+        ContainerStatus status,
+        GameMode gameMode,
+        Difficulty difficulty,
+        String seed,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
 }

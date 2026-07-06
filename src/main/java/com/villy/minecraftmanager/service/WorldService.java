@@ -1,6 +1,7 @@
 package com.villy.minecraftmanager.service;
 
 import com.villy.minecraftmanager.entity.World;
+import com.villy.minecraftmanager.enums.ContainerStatus;
 import com.villy.minecraftmanager.repository.WorldRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class WorldService {
     }
 
     public World save(World world) {
+        world.setStatus(ContainerStatus.CREATED);
         return worldRepository.save(world);
     }
 
