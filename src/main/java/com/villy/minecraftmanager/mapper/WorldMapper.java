@@ -17,21 +17,21 @@ public class WorldMapper {
                 .build();
     }
 
-    public static WorldResponse toResponse(World carta, String host) {
-        String address = host + ":" + carta.getPort();
+    public static WorldResponse toResponse(World world, String host) {
+        String address = host + ":" + world.getPort();
 
         return new WorldResponse(
-                carta.getId(),
-                carta.getName(),
+                world.getId(),
+                world.getName(),
                 address,
-                carta.getDescription(),
-                carta.getContainerId(),
-                carta.getStatus(),
-                carta.getGameMode(),
-                carta.getDifficulty(),
-                carta.getSeed(),
-                carta.getCreatedAt(),
-                carta.getUpdatedAt()
+                world.getDescription(),
+                world.getContainerId(),
+                world.getStatus(),
+                world.getGameMode(),
+                world.getDifficulty(),
+                world.getSeed(),
+                world.getCreatedAt(),
+                world.getUpdatedAt()
         );
     }
 
