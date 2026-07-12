@@ -1,5 +1,6 @@
 package com.villy.minecraftmanager.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -7,16 +8,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class WorldStorageService {
 
     @Value("${minecraft.worlds-directory}")
     private String worldsDirectory;
+
+    private final FileStorageService fileStorageService;
 
     public Path getWorldRootDirectory(UUID worldId) {
         return Paths.get(worldsDirectory, worldId.toString());
@@ -37,29 +38,11 @@ public class WorldStorageService {
     }
 
     public Path moveWorld(Path source, UUID worldId) throws IOException {
-        Path destination = getWorldDirectory(worldId);
-        Files.createDirectories(destination.getParent());
-
-        return Files.move(source, destination, StandardCopyOption.REPLACE_EXISTING);
+        return fileStorageService.move(source, getWorldRootDirectory(worldId));
     }
 
     public void deleteWorldDirectory(UUID worldId) throws IOException {
-        Path worldDir = getWorldRootDirectory(worldId);
-
-        if (!Files.exists(worldDir)) {
-            return;
-        }
-
-        try (Stream<Path> paths = Files.walk(worldDir)) {
-            paths.sorted(Comparator.reverseOrder())
-                    .forEach(path -> {
-                        try {
-                            Files.delete(path);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-        }
+        fileStorageService.deleteDirectory(getWorldRootDirectory(worldId));
     }
 
 }

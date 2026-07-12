@@ -29,6 +29,7 @@ public class WorldImportService {
         file.transferTo(tempFile);
         Path extractDir = Files.createTempDirectory("minecraft-world-");
         extractZip(tempFile, extractDir);
+        Files.deleteIfExists(tempFile);
 
         return readLevelData(findWorldDirectory(extractDir));
     }

@@ -22,6 +22,7 @@ public class WorldService {
     private final WorldRepository worldRepository;
     private final WorldImportService worldImportService;
     private final WorldStorageService worldStorageService;
+    private final FileStorageService fileStorageService;
     private final PortService portService;
     private final DockerService dockerService;
 
@@ -58,7 +59,11 @@ public class WorldService {
                 .simulationDistance(request.configuration().simulationDistance())
                 .build();
 
-        return provisionWorld(world, importedWorld.worldPath());
+        try {
+            return provisionWorld(world, importedWorld.worldPath());
+        } finally {
+            fileStorageService.deleteDirectory(importedWorld.worldPath().getParent());
+        }
     }
 
     private World provisionWorld(World world, Path worldDir) {
