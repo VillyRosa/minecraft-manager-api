@@ -1,39 +1,28 @@
 package com.villy.minecraftmanager.service;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@RequiredArgsConstructor
 public class WorldExportService {
 
-    @Value("${minecraft.worlds-directory}")
-    private String worldsDirectory;
+    private final WorldStorageService worldStorageService;
 
     public Path exportWorld(UUID worldId) throws IOException {
-        Path worldPath = findWorldDirectory(worldId);
+        Path worldPath = worldStorageService.requireWorldDirectory(worldId);
         Path zipFile = createTemporaryZip(worldId);
 
         zipDirectory(worldPath, zipFile);
 
         return zipFile;
-    }
-
-    private Path findWorldDirectory(UUID worldId) {
-        Path worldPath = Paths.get(worldsDirectory, worldId.toString(), "world");
-
-        if (!Files.exists(worldPath)) {
-            throw new IllegalArgumentException("World not found.");
-        }
-
-        return worldPath;
     }
 
     private Path createTemporaryZip(UUID worldId) throws IOException {

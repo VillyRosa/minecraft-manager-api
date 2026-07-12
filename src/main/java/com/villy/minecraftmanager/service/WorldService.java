@@ -67,7 +67,7 @@ public class WorldService {
 
         try {
             if (imported) {
-                worldImportService.moveWorldToWorldsDirectory(worldDir, savedWorld.getId());
+                worldStorageService.moveWorld(worldDir, savedWorld.getId());
             }
 
             String containerId = dockerService.createMinecraftContainer(savedWorld, imported);

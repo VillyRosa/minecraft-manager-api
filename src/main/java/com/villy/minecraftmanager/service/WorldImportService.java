@@ -6,7 +6,6 @@ import com.villy.minecraftmanager.enums.GameMode;
 import jakarta.ws.rs.BadRequestException;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,19 +14,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
-import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 @Service
 public class WorldImportService {
-
-    @Value("${minecraft.worlds-directory}")
-    private String worldsDirectory;
 
     public ImportedWorld importWorld(MultipartFile file) throws IOException {
         validateFile(file);
@@ -37,18 +31,6 @@ public class WorldImportService {
         extractZip(tempFile, extractDir);
 
         return readLevelData(findWorldDirectory(extractDir));
-    }
-
-    public Path moveWorldToWorldsDirectory(Path worldDir, UUID worldId) throws IOException {
-        Path destination = Paths.get(worldsDirectory, worldId.toString(), "world");
-
-        Files.createDirectories(destination.getParent());
-
-        return Files.move(
-                worldDir,
-                destination,
-                StandardCopyOption.REPLACE_EXISTING
-        );
     }
 
     private ImportedWorld readLevelData(Path worldDir) {

@@ -4,10 +4,8 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.*;
 import com.villy.minecraftmanager.entity.World;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DockerService {
 
-    @Value("${minecraft.worlds-directory}")
-    private String worldsDirectory;
     private final DockerClient dockerClient;
+    private final WorldStorageService worldStorageService;
 
     public String createMinecraftContainer(World world, boolean imported) {
         var container = dockerClient.createContainerCmd("itzg/minecraft-server")
@@ -54,7 +51,7 @@ public class DockerService {
     }
 
     private HostConfig createHostConfig(World world) {
-        String worldPath = Paths.get(worldsDirectory, world.getId().toString())
+        String worldPath = worldStorageService.getWorldRootDirectory(world.getId())
                 .toAbsolutePath()
                 .toString();
 
