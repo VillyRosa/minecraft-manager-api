@@ -4,7 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+.DS_STORE
 .env
+/minecraft-data
 
 ### STS ###
 .apt_generated

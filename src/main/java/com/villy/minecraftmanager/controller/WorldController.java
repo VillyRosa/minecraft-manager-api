@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +43,14 @@ public class WorldController {
     @PostMapping
     public ResponseEntity<WorldResponse> save(@RequestBody WorldRequest request) {
         WorldResponse response = WorldMapper.toResponse(worldService.save(WorldMapper.toEntity(request)), host);
+        URI location = URI.create("/worlds/" + response.id());
+
+        return ResponseEntity.created(location).body(response);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<WorldResponse> importWorld(@RequestParam("file") MultipartFile file) throws IOException {
+        WorldResponse response = WorldMapper.toResponse(worldService.save(file), host);
         URI location = URI.create("/worlds/" + response.id());
 
         return ResponseEntity.created(location).body(response);

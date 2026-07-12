@@ -23,4 +23,16 @@ public enum Difficulty {
             );
         };
     }
+
+    public static Difficulty fromName(String name) {
+        return switch (name.toLowerCase()) {
+            case "peaceful" -> PEACEFUL;
+            case "easy" -> EASY;
+            case "normal" -> NORMAL;
+            case "hard" -> HARD;
+            default -> throw new IllegalArgumentException(
+                    "Unknown difficulty: " + name
+            );
+        };
+    }
 }
