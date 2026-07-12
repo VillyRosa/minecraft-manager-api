@@ -4,15 +4,21 @@ import com.villy.minecraftmanager.controller.request.WorldRequest;
 import com.villy.minecraftmanager.controller.response.WorldResponse;
 import com.villy.minecraftmanager.entity.World;
 import com.villy.minecraftmanager.mapper.WorldMapper;
+import com.villy.minecraftmanager.service.WorldExportService;
 import com.villy.minecraftmanager.service.WorldService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +31,7 @@ public class WorldController {
     private String host;
 
     private final WorldService worldService;
+    private final WorldExportService worldExportService;
 
     @GetMapping
     public ResponseEntity<List<WorldResponse>> findAll() {
@@ -54,6 +61,17 @@ public class WorldController {
         URI location = URI.create("/worlds/" + response.id());
 
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/{id}/export")
+    public ResponseEntity<Resource> exportWorld(@PathVariable UUID id) throws IOException {
+        Path zip = worldExportService.exportWorld(id);
+        Resource resource = new FileSystemResource(zip);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"world.zip\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     @PutMapping("/{id}")
