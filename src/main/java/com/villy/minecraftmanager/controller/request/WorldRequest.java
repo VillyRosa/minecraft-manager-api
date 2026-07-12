@@ -8,6 +8,7 @@ public record WorldRequest(
         String description,
         GameMode gameMode,
         Difficulty difficulty,
-        String seed
+        String seed,
+        MinecraftServerConfigurationRequest configuration
 ) {
 }

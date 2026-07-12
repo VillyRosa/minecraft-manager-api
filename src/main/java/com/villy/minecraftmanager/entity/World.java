@@ -27,6 +27,9 @@ public class World {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String motd;
+
     private String description;
 
     @Column(name = "container_id")
@@ -48,6 +51,18 @@ public class World {
 
     @Column(nullable = false)
     private Integer port;
+
+    @Column(name = "memory_mb", nullable = false)
+    private Integer memoryMb;
+
+    @Column(name = "max_players", nullable = false)
+    private Integer maxPlayers;
+
+    @Column(name = "view_distance", nullable = false)
+    private Integer viewDistance;
+
+    @Column(name = "simulation_distance", nullable = false)
+    private Integer simulationDistance;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

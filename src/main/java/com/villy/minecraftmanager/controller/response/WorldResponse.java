@@ -17,6 +17,7 @@ public record WorldResponse(
         GameMode gameMode,
         Difficulty difficulty,
         String seed,
+        MinecraftServerConfigurationResponse configuration,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
