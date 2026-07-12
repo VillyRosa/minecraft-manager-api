@@ -1,5 +1,6 @@
 package com.villy.minecraftmanager.service;
 
+import com.villy.minecraftmanager.controller.request.WorldImportRequest;
 import com.villy.minecraftmanager.domain.ImportedWorld;
 import com.villy.minecraftmanager.entity.World;
 import com.villy.minecraftmanager.enums.ContainerStatus;
@@ -39,15 +40,21 @@ public class WorldService {
         return provisionWorld(world, null);
     }
 
-    public World save(MultipartFile file) throws IOException {
+    public World save(MultipartFile file, WorldImportRequest request) throws IOException {
         ImportedWorld importedWorld = worldImportService.importWorld(file);
 
         World world = World.builder()
                 .name(importedWorld.name())
+                .motd(request.configuration().motd())
+                .description(request.description())
                 .status(ContainerStatus.CREATED)
                 .gameMode(importedWorld.gameMode())
                 .difficulty(importedWorld.difficulty())
                 .port(portService.findAvaliablePort())
+                .memoryMb(request.configuration().memoryMb())
+                .maxPlayers(request.configuration().maxPlayers())
+                .viewDistance(request.configuration().viewDistance())
+                .simulationDistance(request.configuration().simulationDistance())
                 .build();
 
         return provisionWorld(world, importedWorld.worldPath());

@@ -1,5 +1,7 @@
 package com.villy.minecraftmanager.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.villy.minecraftmanager.controller.request.WorldImportRequest;
 import com.villy.minecraftmanager.controller.request.WorldRequest;
 import com.villy.minecraftmanager.controller.response.WorldResponse;
 import com.villy.minecraftmanager.entity.World;
@@ -11,10 +13,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,6 +37,7 @@ public class WorldController {
 
     private final WorldService worldService;
     private final WorldExportService worldExportService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping
     public ResponseEntity<List<WorldResponse>> findAll() {
@@ -55,12 +61,26 @@ public class WorldController {
         return ResponseEntity.created(location).body(response);
     }
 
-    @PostMapping("/import")
-    public ResponseEntity<WorldResponse> importWorld(@RequestParam("file") MultipartFile file) throws IOException {
-        WorldResponse response = WorldMapper.toResponse(worldService.save(file), host);
-        URI location = URI.create("/worlds/" + response.id());
+    @PostMapping(
+            value = "/import",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<WorldResponse> importWorld(
+            @RequestParam MultipartFile file,
+            @RequestParam("request") String requestJson
+    ) throws IOException {
+        try {
+            WorldImportRequest request = objectMapper.readValue(requestJson, WorldImportRequest.class);
+            WorldResponse response = WorldMapper.toResponse(worldService.save(file, request), host);
+            URI location = URI.create("/worlds/" + response.id());
 
-        return ResponseEntity.created(location).body(response);
+            return ResponseEntity.created(location).body(response);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid import configuration JSON"
+            );
+        }
     }
 
     @GetMapping("/{id}/export")

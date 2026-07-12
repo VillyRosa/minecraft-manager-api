@@ -36,7 +36,11 @@ public class DockerService {
         env.add("EULA=TRUE");
         env.add("TYPE=PAPER");
         env.add("VERSION=26.2");
-        env.add("MEMORY=2G");
+        env.add("MEMORY=" + world.getMemoryMb() + "M");
+        env.add("MAX_PLAYERS=" + world.getMaxPlayers());
+        env.add("VIEW_DISTANCE=" + world.getViewDistance());
+        env.add("SIMULATION_DISTANCE=" + world.getSimulationDistance());
+        env.add("MOTD=" + world.getMotd());
         env.add("ENABLE_RCON=true");
         env.add("RCON_PASSWORD=123456");
 
