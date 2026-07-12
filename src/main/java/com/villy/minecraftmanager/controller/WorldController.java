@@ -103,7 +103,7 @@ public class WorldController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) throws IOException {
         worldService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

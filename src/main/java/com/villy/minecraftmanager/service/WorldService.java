@@ -21,6 +21,7 @@ public class WorldService {
 
     private final WorldRepository worldRepository;
     private final WorldImportService worldImportService;
+    private final WorldStorageService worldStorageService;
     private final PortService portService;
     private final DockerService dockerService;
 
@@ -92,9 +93,10 @@ public class WorldService {
         return save(existingWorld);
     }
 
-    public void deleteById(UUID id) {
+    public void deleteById(UUID id) throws IOException {
         var world = findById(id);
         dockerService.deleteContainerById(world.getContainerId());
+        worldStorageService.deleteWorldDirectory(world.getId());
         worldRepository.delete(world);
     }
 
