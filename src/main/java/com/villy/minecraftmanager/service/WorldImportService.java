@@ -3,7 +3,7 @@ package com.villy.minecraftmanager.service;
 import com.villy.minecraftmanager.domain.ImportedWorld;
 import com.villy.minecraftmanager.enums.Difficulty;
 import com.villy.minecraftmanager.enums.GameMode;
-import jakarta.ws.rs.BadRequestException;
+import com.villy.minecraftmanager.exception.BadRequestException;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import org.springframework.stereotype.Service;
@@ -110,7 +110,7 @@ public class WorldImportService {
 
     private void validateFile(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty.");
+            throw new BadRequestException("File is empty.");
         }
 
         if (!file.getOriginalFilename().endsWith(".zip")) {

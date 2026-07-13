@@ -1,6 +1,7 @@
 package com.villy.minecraftmanager.service;
 
 import com.villy.minecraftmanager.entity.Location;
+import com.villy.minecraftmanager.exception.ResourceNotFoundException;
 import com.villy.minecraftmanager.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class LocationService {
     }
 
     public Location findById(UUID id) {
-        return locationRepository.findById(id).orElse(null);
+        return locationRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Location with id " + id + " not found!"));
     }
 
     public Location save(Location location) {

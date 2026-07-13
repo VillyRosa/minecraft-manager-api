@@ -4,6 +4,7 @@ import com.villy.minecraftmanager.controller.request.WorldImportRequest;
 import com.villy.minecraftmanager.domain.ImportedWorld;
 import com.villy.minecraftmanager.entity.World;
 import com.villy.minecraftmanager.enums.ContainerStatus;
+import com.villy.minecraftmanager.exception.ResourceNotFoundException;
 import com.villy.minecraftmanager.repository.WorldRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ public class WorldService {
 
     public World findById(UUID id) {
         Optional<World> world = worldRepository.findById(id);
-        return world.orElse(null);
+        return world.orElseThrow(() ->
+                    new ResourceNotFoundException("World with id " + id + " not found!")
+                );
     }
 
     public World save(World world) {
